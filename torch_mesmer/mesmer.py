@@ -1,6 +1,7 @@
 """Mesmer application"""
 
 import logging
+import time
 
 import numpy as np
 
@@ -510,6 +511,7 @@ class Mesmer():
         }
 
         # overwrite defaults with any user-provided values
+        tic = time.time()
         postprocess_kwargs_whole_cell = {**default_kwargs_cell,
                                          **postprocess_kwargs_whole_cell}
 
@@ -532,10 +534,16 @@ class Mesmer():
 
         # Tile images, raises error if the image is not 4d
         tiles, tiles_info = tile_input(image, pad_mode=pad_mode, model_image_shape=self.model_image_shape)
+        toc = time.time()
+        print(f"  Preprocessing time: {toc - tic}")
 
+        tic = time.time()
         output_tiles = batch_predict(tiles=tiles, batch_size=batch_size, model=self.model, device=self.device)
+        toc = time.time()
+        print(f"  Inference time: {toc - tic}")
 
         # Untile images
+        tic = time.time()
         output_images = untile_output(output_tiles, tiles_info, self.model_image_shape)
 
         output_images = format_output_mesmer(output_images)
@@ -546,4 +554,7 @@ class Mesmer():
             image = np.expand_dims(image, axis=-1)
 
         label_image = resize_output(label_image, orig_img_shape)
+        toc = time.time()
+        print(f"  Postprocessing time: {toc - tic}")
+
         return label_image
