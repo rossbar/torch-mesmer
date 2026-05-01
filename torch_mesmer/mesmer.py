@@ -1,3 +1,4 @@
+import time
 import torch
 torch.set_num_threads(24)
 
@@ -164,6 +165,7 @@ class Mesmer():
             'pixel_expansion': 0
         }
 
+        tic = time.time()
         # overwrite defaults with any user-provided values
         postprocess_kwargs_whole_cell = {**default_kwargs_cell,
                                          **postprocess_kwargs_whole_cell}
@@ -180,7 +182,10 @@ class Mesmer():
         tiles, tiles_info = tile_input(image, pad_mode=pad_mode, model_image_shape=self.model_image_shape)
         B_tiles = tiles.shape[0]
         output_tiles = np.zeros((B_tiles,) + (8,) + self.model_image_shape)
+        toc = time.time()
+        print(f"  Preprocessing time: {toc - tic}")
 
+        tic = time.time()
         for tile_batch_start in range(0, tiles.shape[0], batch_size):
             # Load only this batch to GPU
             tile_batch = torch.tensor(tiles[tile_batch_start:tile_batch_start+batch_size]).to(self.device)
@@ -195,9 +200,12 @@ class Mesmer():
             del tile_batch, pred
             if self.device != 'cpu':
                 torch.cuda.empty_cache()
+        toc = time.time()
+        print(f"  Inference time: {toc - tic}")
 
 
         # Untile images
+        tic = time.time()
         output_images = untile_output(output_tiles, tiles_info)
 
         label_image = mesmer_postprocess(
@@ -208,6 +216,8 @@ class Mesmer():
                                         )
 
         label_image = resize_output(label_image, orig_img_shape).astype(int)
+        toc = time.time()
+        print(f"  Postprocessing time: {toc - tic}")
 
         if return_transforms:
             return label_image, output_images
