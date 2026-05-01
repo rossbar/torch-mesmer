@@ -1,8 +1,11 @@
+import warnings
 import time
 from torch_mesmer.mesmer import Mesmer
 import numpy as np
 from pathlib import Path
 import zarr
+
+warnings.simplefilter("ignore")
 
 zname = Path.home() / "hubmap-to-zarr/tissuenet.zarr"
 z = zarr.open(zname, mode="r")
