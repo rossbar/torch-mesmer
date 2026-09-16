@@ -31,7 +31,7 @@
 <link href="_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
   
   <!-- So that users can add custom icons -->
   <script defer src="_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
@@ -46,6 +46,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Model and Datasets" href="model_access.html" />
     <link rel="prev" title="torch-mesmer documentation" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -137,6 +138,13 @@
   </a>
 </li>
 
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="model_access.html">
+    Model and Datasets
+  </a>
+</li>
+
   </ul>
 </nav></div>
       
@@ -220,6 +228,13 @@
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="#">
     Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="model_access.html">
+    Model and Datasets
   </a>
 </li>
 
@@ -350,7 +365,7 @@ installed.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">zarr</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">zarr</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">zarr</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;3&quot;</span><span class="p">):</span>
     <span class="k">raise</span> <span class="ne">EnvironmentError</span><span class="p">(</span>
@@ -364,7 +379,7 @@ installed.</p>
 <h3>Exploring the archive<a class="headerlink" href="#exploring-the-archive" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open_group</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open_group</span><span class="p">(</span>
     <span class="n">store</span><span class="o">=</span><span class="s2">&quot;s3://deepcelltypes-demo-datasets/hubmap.zarr&quot;</span><span class="p">,</span>
     <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span>
     <span class="n">storage_options</span><span class="o">=</span><span class="p">{</span>
@@ -379,10 +394,29 @@ installed.</p>
 <p>High-level structure of the data archive:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">z</span><span class="o">.</span><span class="n">tree</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z</span><span class="o">.</span><span class="n">tree</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><b>/</b>
+├── <b>HBM267_BZKT_867</b>
+│   ├── <b>image</b> (19, 9072, 9408) uint16
+│   └── <b>segmentations</b>
+│       ├── <b>cellsam</b> (9072, 9408) uint32
+│       └── <b>torch_mesmer</b> (9072, 9408) uint32
+├── <b>HBM685_PCCJ_427</b>
+│   ├── <b>image</b> (54, 9510, 9993) uint16
+│   └── <b>segmentations</b>
+│       ├── <b>cellsam</b> (9510, 9993) uint32
+│       └── <b>torch_mesmer</b> (9510, 9993) uint32
+└── <b>HBM994_PDJN_987</b>
+    ├── <b>image</b> (37, 2048, 2048) int16
+    └── <b>segmentations</b>
+        ├── <b>cellsam</b> (2048, 2048) uint32
+        └── <b>torch_mesmer</b> (2048, 2048) uint32
+</pre>
+</div></div>
 </div>
 </section>
 <section id="selecting-a-dataset">
@@ -390,7 +424,7 @@ installed.</p>
 <p>A more detailed look at the datasets:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>  <span class="c1"># for nice html rendering</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>  <span class="c1"># for nice html rendering</span>
 
 <span class="n">summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
     <span class="p">{</span><span class="n">k</span><span class="p">:</span>
@@ -409,12 +443,62 @@ installed.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tissue</th>
+      <th>technology</th>
+      <th>Num ch.</th>
+      <th>shape</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>HBM267_BZKT_867</th>
+      <td>spleen</td>
+      <td>codex</td>
+      <td>19</td>
+      <td>(9072, 9408)</td>
+    </tr>
+    <tr>
+      <th>HBM685_PCCJ_427</th>
+      <td>intestine</td>
+      <td>codex</td>
+      <td>54</td>
+      <td>(9510, 9993)</td>
+    </tr>
+    <tr>
+      <th>HBM994_PDJN_987</th>
+      <td>uterus</td>
+      <td>mibi</td>
+      <td>37</td>
+      <td>(2048, 2048)</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <p>In the interest of minimizing network bandwidth, we’ll use the <code class="docutils literal notranslate"><span class="pre">HBM994_PDJN_987</span></code>
 dataset for this tutorial.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="s2">&quot;HBM994_PDJN_987&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="s2">&quot;HBM994_PDJN_987&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -437,10 +521,54 @@ marker is required.</p>
 <p>The multiplexed image in this dataset contains 37 channels:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="n">chnames</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;channels&quot;</span><span class="p">]</span>
 <span class="n">chnames</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(37, 2048, 2048)
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;CD11C&#39;,
+ &#39;CD14&#39;,
+ &#39;CD16&#39;,
+ &#39;CD163&#39;,
+ &#39;CD20&#39;,
+ &#39;CD206&#39;,
+ &#39;CD3&#39;,
+ &#39;CD31&#39;,
+ &#39;CD4&#39;,
+ &#39;CD44&#39;,
+ &#39;CD45&#39;,
+ &#39;CD56&#39;,
+ &#39;CD57&#39;,
+ &#39;CD68&#39;,
+ &#39;CD8&#39;,
+ &#39;CD80&#39;,
+ &#39;CK7&#39;,
+ &#39;DCSIGN&#39;,
+ &#39;ECAD&#39;,
+ &#39;FOXP3&#39;,
+ &#39;GALECTIN9&#39;,
+ &#39;GRB&#39;,
+ &#39;H3&#39;,
+ &#39;HLADR&#39;,
+ &#39;HLAG&#39;,
+ &#39;HO1&#39;,
+ &#39;IDO&#39;,
+ &#39;KI67&#39;,
+ &#39;LCK&#39;,
+ &#39;PD1&#39;,
+ &#39;PDL1&#39;,
+ &#39;SMA&#39;,
+ &#39;TIGIT&#39;,
+ &#39;TIM3&#39;,
+ &#39;TRYPTASE&#39;,
+ &#39;VIM&#39;,
+ &#39;INOS&#39;]
 </pre></div>
 </div>
 </div>
@@ -449,9 +577,14 @@ marker is required.</p>
 We’ll use <code class="docutils literal notranslate"><span class="pre">H3</span></code> as the nuclear marker and <code class="docutils literal notranslate"><span class="pre">ECAD</span></code> as the membrane marker:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nuc</span><span class="p">,</span> <span class="n">mem</span> <span class="o">=</span> <span class="s2">&quot;H3&quot;</span><span class="p">,</span> <span class="s2">&quot;ECAD&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nuc</span><span class="p">,</span> <span class="n">mem</span> <span class="o">=</span> <span class="s2">&quot;H3&quot;</span><span class="p">,</span> <span class="s2">&quot;ECAD&quot;</span>
 
 <span class="nb">all</span><span class="p">(</span><span class="n">marker</span> <span class="ow">in</span> <span class="n">chnames</span> <span class="k">for</span> <span class="n">marker</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;H3&quot;</span><span class="p">,</span> <span class="s2">&quot;ECAD&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
 </pre></div>
 </div>
 </div>
@@ -461,7 +594,7 @@ The Mesmer pipeline requires multi-channel images to be in channel-first format,
 so we stack the image such that the channel dimension is first:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
     <span class="p">[</span><span class="n">ds</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">][</span><span class="n">chnames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">nuc</span><span class="p">)],</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">][</span><span class="n">chnames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">mem</span><span class="p">)]],</span>
@@ -473,12 +606,22 @@ so we stack the image such that the channel dimension is first:</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(2, 2048, 2048)
+</pre></div>
+</div>
+</div>
 </div>
 <p>The mpp for the image is included in the metadata:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mpp</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;mpp&quot;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mpp</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;mpp&quot;</span><span class="p">]</span>
 <span class="n">mpp</span>  <span class="c1"># microns-per-pixel</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.6
 </pre></div>
 </div>
 </div>
@@ -490,9 +633,18 @@ so we stack the image such that the channel dimension is first:</p>
 <p>We begin by instantiating a <code class="docutils literal notranslate"><span class="pre">Mesmer</span></code> segmentation instance:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch_mesmer.mesmer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mesmer</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch_mesmer.mesmer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mesmer</span>
 
-<span class="n">app</span> <span class="o">=</span> <span class="n">Mesmer</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">Mesmer</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda:1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/administrator/envs/torch-mesmer-313-dev/lib/python3.13/site-packages/tqdm/auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing model...
 </pre></div>
 </div>
 </div>
@@ -500,7 +652,7 @@ so we stack the image such that the channel dimension is first:</p>
 <p>By default, the <code class="docutils literal notranslate"><span class="pre">Mesmer</span></code> instance attempts to download the latest pre-trained model
 weights from huggingface.
 This requires the user to have an active <code class="docutils literal notranslate"><span class="pre">HF_TOKEN</span></code> that is linked to the <a class="reference external" href="https://huggingface.co/vanvalenlab">vanvalenlab org</a>.
-See <span class="xref std std-doc">Model and datasets</span> for more info.
+See <a class="reference internal" href="model_access.html"><span class="doc">Model and Datasets</span></a> for more info.
 Alternatively, weights can be specified manually with the <code class="docutils literal notranslate"><span class="pre">model_path=</span></code> kwarg - see the
 <span class="xref std std-ref">Mesmer API reference</span> for further details.</p>
 </section>
@@ -510,7 +662,37 @@ Alternatively, weights can be specified manually with the <code class="docutils 
 segmentation:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">image_mpp</span><span class="o">=</span><span class="n">mpp</span><span class="p">,</span> <span class="n">compartment</span><span class="o">=</span><span class="s2">&quot;whole-cell&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">image_mpp</span><span class="o">=</span><span class="n">mpp</span><span class="p">,</span> <span class="n">compartment</span><span class="o">=</span><span class="s2">&quot;whole-cell&quot;</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">12</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/administrator/repos/torch-mesmer/torch_mesmer/postprocess_utils.py:559: FutureWarning: Parameter `min_size` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_objects`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  label_image = remove_small_objects(label_image,
+/home/administrator/repos/torch-mesmer/torch_mesmer/utils.py:88: FutureWarning: Parameter `area_threshold` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_holes`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  filled = skimage.morphology.remove_small_holes(
+/home/administrator/repos/torch-mesmer/torch_mesmer/utils.py:88: FutureWarning: Parameter `area_threshold` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_holes`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  filled = skimage.morphology.remove_small_holes(
+/home/administrator/repos/torch-mesmer/torch_mesmer/utils.py:88: FutureWarning: Parameter `area_threshold` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_holes`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  filled = skimage.morphology.remove_small_holes(
+/home/administrator/repos/torch-mesmer/torch_mesmer/utils.py:88: FutureWarning: Parameter `area_threshold` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_holes`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  filled = skimage.morphology.remove_small_holes(
+/home/administrator/repos/torch-mesmer/torch_mesmer/utils.py:88: FutureWarning: Parameter `area_threshold` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_holes`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  filled = skimage.morphology.remove_small_holes(
+/home/administrator/repos/torch-mesmer/torch_mesmer/utils.py:88: FutureWarning: Parameter `area_threshold` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_holes`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  filled = skimage.morphology.remove_small_holes(
+/home/administrator/repos/torch-mesmer/torch_mesmer/utils.py:88: FutureWarning: Parameter `area_threshold` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_holes`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  filled = skimage.morphology.remove_small_holes(
+/home/administrator/repos/torch-mesmer/torch_mesmer/utils.py:88: FutureWarning: Parameter `area_threshold` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_holes`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  filled = skimage.morphology.remove_small_holes(
+/home/administrator/repos/torch-mesmer/torch_mesmer/utils.py:88: FutureWarning: Parameter `area_threshold` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_holes`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  filled = skimage.morphology.remove_small_holes(
+/home/administrator/repos/torch-mesmer/torch_mesmer/utils.py:88: FutureWarning: Parameter `area_threshold` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_holes`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  filled = skimage.morphology.remove_small_holes(
+/home/administrator/repos/torch-mesmer/torch_mesmer/utils.py:88: FutureWarning: Parameter `area_threshold` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_holes`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  filled = skimage.morphology.remove_small_holes(
+/home/administrator/repos/torch-mesmer/torch_mesmer/utils.py:88: FutureWarning: Parameter `area_threshold` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_holes`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  filled = skimage.morphology.remove_small_holes(
 </pre></div>
 </div>
 </div>
@@ -519,7 +701,12 @@ segmentation:</p>
 image:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(2048, 2048)
 </pre></div>
 </div>
 </div>
@@ -535,7 +722,7 @@ visualization.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">napari</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">napari</span>
 <span class="n">nim</span> <span class="o">=</span> <span class="n">napari</span><span class="o">.</span><span class="n">Viewer</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Headless for CI; set show=True for interactive viz</span>
 
 <span class="c1"># Visualize multiplex image</span>
@@ -555,7 +742,7 @@ visualization.</p>
 <p class="expanded admonition-title">Hide code cell content</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># For static rendering - can safely be ignored if running notebook interactively</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># For static rendering - can safely be ignored if running notebook interactively</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="n">screenshot_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;_static/_generated&quot;</span><span class="p">)</span>
@@ -596,6 +783,15 @@ visualization.</p>
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">torch-mesmer</span></code> documentation</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="model_access.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Model and Datasets</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
