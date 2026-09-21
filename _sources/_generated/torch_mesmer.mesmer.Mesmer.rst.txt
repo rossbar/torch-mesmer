@@ -1,0 +1,23 @@
+﻿torch\_mesmer.mesmer.Mesmer
+===========================
+
+.. currentmodule:: torch_mesmer.mesmer
+
+.. autoclass:: Mesmer
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Mesmer.__init__
+      ~Mesmer.predict
+   
+   
+
+   
+   
+   

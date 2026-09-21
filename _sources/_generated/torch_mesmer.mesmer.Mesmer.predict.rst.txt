@@ -1,0 +1,6 @@
+﻿torch\_mesmer.mesmer.Mesmer.predict
+===================================
+
+.. currentmodule:: torch_mesmer.mesmer
+
+.. automethod:: Mesmer.predict
