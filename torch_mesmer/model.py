@@ -1,7 +1,6 @@
 import torch
 from torch import nn
 
-from torch_mesmer.modules import SemanticHead, FeaturePyramidNetwork, Location2D, BackboneNetwork
 
 class PanopticNet(nn.Module):
     def __init__(
@@ -29,6 +28,11 @@ class PanopticNet(nn.Module):
                 The second semantic head is predicting the pixelwise transform of size 3 channels
                     (whether a pixel belongs to cell interior, boundary, or background)
         '''
+        from torch_mesmer.modules import (
+            SemanticHead, FeaturePyramidNetwork, Location2D, BackboneNetwork
+        )
+
+
         super().__init__()
 
         # Store configuration
